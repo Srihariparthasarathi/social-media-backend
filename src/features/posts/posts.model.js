@@ -31,6 +31,14 @@ export default class PostsModel{
         if(posts.length == 0) throw new ApplicationError(`${NO_POST_CREATED_BY_USER}`, POST_NOT_FOUND_CODE);
         return posts;
     }
+
+    static addPost(userId, caption, imageUrl){
+        let newId = (postList.length > 0) ? postList[postList.length-1].id + 1 : 1;
+        const newPost = new PostsModel(newId, userId, caption, imageUrl);
+        postList.push(newPost);
+        return newPost;
+    }
+
 }
 
 const postList = [

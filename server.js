@@ -1,8 +1,12 @@
 // OM NAMASIVAYA
 import express from "express";
-import apiRouter from "./api.router.js"
-import swaggerUi from "swagger-ui-express"
+import apiRouter from "./api.router.js";
+import swaggerUi from "swagger-ui-express";
+import multer from "multer";
+import path from "path"
+
 import swaggerDoc from "./swagger.json" assert { type: "json" };
+
 
 //middleware
 import { errorHandlerMiddleware, urlNotExistMiddlerare } from "./src/middlewares/applicationError.middleware.js"
@@ -13,6 +17,8 @@ const logger = new Loggers();
 
 //swagger middleware
 server.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+
+server.use(express.static(path.resolve("public")));
 
 server.use(express.json()); 
 server.use(logger.requestLogger);

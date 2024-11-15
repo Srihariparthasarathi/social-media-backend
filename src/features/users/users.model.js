@@ -36,8 +36,8 @@ export default class UserModel{
     }
 
     static addUser(username, email, password){
-        let index = (usersList.length > 0) ? usersList[usersList.length-1].id + 1 : 1;
-        const newUser = new UserModel(index, username, email, password);
+        let newId = (usersList.length > 0) ? usersList[usersList.length-1].id + 1 : 1;
+        const newUser = new UserModel(newId, username, email, password);
         usersList.push(newUser);
         return newUser;
     }
