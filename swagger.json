@@ -263,6 +263,80 @@
                 }
               }
             }
-          }
+        },
+        "/posts/{id}": {
+            "get": {
+              "tags": ["Posts"],
+              "summary": "Get a post by its ID",
+              "description": "Fetches a post by its ID. If the post exists, it returns the post details. Otherwise, it returns a 404 error.",
+              "parameters": [
+                {
+                  "name": "id",
+                  "in": "path",
+                  "required": true,
+                  "schema": {
+                    "type": "integer",
+                    "example": 1
+                  },
+                  "description": "ID of the post"
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "Post found",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "posts": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "userid": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "caption": {
+                                  "type": "string",
+                                  "example": "My first post on this platform!"
+                                },
+                                "imageurl": {
+                                  "type": "string",
+                                  "example": "http://example.com/image1.jpg"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "404": {
+                  "description": "Post not found",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "string",
+                            "example": "Please check the post ID and try again. No post found with ID: 3"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+        }
+
     }
 }
