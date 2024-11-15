@@ -16,7 +16,7 @@ export default class UserController{
              config.jwtSecret,
             {expiresIn: '1h'});
 
-        res.status(SUCCESSFUL_LOGIN_STATUS_CODE).json({token: token});
+        res.status(SUCCESSFUL_LOGIN_STATUS_CODE).json({token: token, user: {userId: user.id, username: user.username, email: user.email}});
 
     }
 
