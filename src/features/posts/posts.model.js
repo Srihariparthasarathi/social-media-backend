@@ -6,6 +6,10 @@ export default class PostsModel{
         this.caption = caption;
         this.imageurl = imageurl;
     }
+
+    static getAll(){
+        return postList;
+    }
 }
 
 const postList = [

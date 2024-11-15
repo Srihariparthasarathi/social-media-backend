@@ -183,6 +183,86 @@
                     }
                 }
             }
-        }
+        },
+        "/posts/all": {
+            "get": {
+              "tags": ["Posts"],
+              "summary": "Retrieve all posts",
+              "description": "Get a list of all posts made by users on the platform.",
+              "responses": {
+                "200": {
+                  "description": "Successfully retrieved the posts",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "posts": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "integer",
+                                  "description": "The unique identifier for the post"
+                                },
+                                "userid": {
+                                  "type": "integer",
+                                  "description": "The ID of the user who created the post"
+                                },
+                                "caption": {
+                                  "type": "string",
+                                  "description": "The caption or description of the post"
+                                },
+                                "imageurl": {
+                                  "type": "string",
+                                  "description": "The URL of the image associated with the post"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      "example": {
+                        "posts": [
+                          {
+                            "id": 1,
+                            "userid": 1,
+                            "caption": "My first post on this platform!",
+                            "imageurl": "http://example.com/image1.jpg"
+                          },
+                          {
+                            "id": 2,
+                            "userid": 1,
+                            "caption": "Had a great day at the beach.",
+                            "imageurl": "http://example.com/image2.jpg"
+                          }
+                        ]
+                      }
+                    }
+                  }
+                },
+                "404": {
+                  "description": "No posts found",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "string",
+                            "description": "Error message when no posts exist"
+                          }
+                        },
+                        "example": {
+                          "error": "There are no posts yet. Be the first to share and make your mark!"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
     }
 }
