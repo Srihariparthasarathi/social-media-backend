@@ -1,0 +1,22 @@
+{
+  "name": "social-media-backend",
+  "version": "1.0.0",
+  "description": "A dynamic social media platform designed to connect users, allowing them to share posts and interact through comments and likes. Built with a secure in-memory data store to manage user data without a database, the platform utilizes JWT authentication to ensure secure access and user privacy. The project is equipped with Swagger documentation, providing clear and interactive API documentation for easy testing and integration. This social media platform highlights efficient data handling, robust authentication, and well-documented API access, ideal for seamless and secure user interactions.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "srihari parthasarathi",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.5",
+    "express": "^4.21.1",
+    "express-validator": "^7.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "winston": "^3.17.0"
+  },
+  "type": "module",
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
