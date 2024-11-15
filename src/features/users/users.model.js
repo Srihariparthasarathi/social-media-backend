@@ -45,5 +45,5 @@ export default class UserModel{
 
 
 const usersList = [
-    new UserModel(1, "srihari", "srihari@gmail.com", "2@ThisIsPwd")
+    new UserModel(1, "user", "user@example.com", "StrongPassword@123"),
 ]

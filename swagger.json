@@ -11,6 +11,22 @@
             "description": "Development server"
         }
     ],
+    "components": {
+        "securitySchemes": {
+          "X-API-KEY": {
+            "type": "apiKey",
+            "in": "header",
+            "name": "Authorization",
+            "description": "JWT token for authentication (without the \"Bearer\" prefix)"
+          }
+        }
+      },
+      "security": [
+        {
+          "X-API-KEY": []
+        }
+      ],
+    
     "paths": {
         "/users/signup": {
             "post": {
@@ -97,7 +113,7 @@
                 }
             }
         },
-        "/users/sign": {
+        "/users/signin": {
             "post": {
                 "tags": ["User Management"],
                 "summary": "User Login",
@@ -336,7 +352,96 @@
                 }
               }
             }
-        }
+        },
+        "/posts": {
+            "get": {
+              "tags": ["Posts"],
+              "summary": "Get all posts",
+              "description": "Fetches all posts of the authenticated user. If no posts are created, a message is returned. Requires a valid JWT token in the Authorization header.",
+              "parameters": [
+                {
+                    "name": "Authorization",
+                    "in": "header",
+                    "required": true,
+                    "schema": {
+                      "type": "string",
+                      "example": "your_jwt_token_here"
+                    },
+                    "description": "JWT token for authentication"
+                  }
+              ],
+              "responses": {
+                "200": {
+                  "description": "Posts found",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "posts": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "userid": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "caption": {
+                                  "type": "string",
+                                  "example": "My first post on this platform!"
+                                },
+                                "imageurl": {
+                                  "type": "string",
+                                  "example": "http://example.com/image1.jpg"
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "404": {
+                  "description": "No posts found",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "string",
+                            "example": "You haven't created any posts yet. Hurry up and share your first one!"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "401": {
+                  "description": "Unauthorized - JWT missing or invalid",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "string",
+                            "example": "Authentication token is missing. Please provide a valid token in the Authorization header."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
 
     }
 }

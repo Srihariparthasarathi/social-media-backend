@@ -16,6 +16,9 @@ export default class PostsController{
 
     }
     getPostByUser(req, res){
+        const userId = req.userId;
+        const posts = PostsModel.getByUserId(userId);
+        res.status(RETURN_POST_SUCCESS_CODE).json({posts: posts});
 
     }
 

@@ -1,6 +1,7 @@
 import ApplicationError from "../../middlewares/applicationError.middleware.js";
 
 const NO_POST_IN_APPLICATION = "There are no posts yet. Be the first to share and make your mark!";
+const NO_POST_CREATED_BY_USER = "You haven't created any posts yet. Hurry up and share your first one!";
 const POST_NOT_FOUND = "Please check the post ID and try again. No post found with ID:";
 
 const POST_NOT_FOUND_CODE = 404;
@@ -24,9 +25,15 @@ export default class PostsModel{
         if(!post) throw new ApplicationError(`${POST_NOT_FOUND} ${postId}`, POST_NOT_FOUND_CODE);
         return post;
     }
+
+    static getByUserId(userId){
+        const posts = postList.filter((post) => post.userid == userId);
+        if(posts.length == 0) throw new ApplicationError(`${NO_POST_CREATED_BY_USER}`, POST_NOT_FOUND_CODE);
+        return posts;
+    }
 }
 
 const postList = [
     new PostsModel(1, 1, "My first post on this platform!", "http://example.com/image1.jpg"),
-    new PostsModel(2, 1, "Had a great day at the beach.", "http://example.com/image2.jpg")
+    new PostsModel(2, 1, "Had a great day at the beach.", "http://example.com/image2.jpg"),
 ];
