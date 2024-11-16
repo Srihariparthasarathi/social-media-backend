@@ -18,7 +18,9 @@ export default class ApplicationError extends Error{
 export const errorHandlerMiddleware = (err, req, res, next)=>{
     if(err){
         if(err instanceof ApplicationError) return res.status(err.statusCode).json({error : err.message});
+        
         logger.applicationErrorLog(err.message, req.path, err.stack);
+        console.log(err);
         return res.status(SERVER_ERROR_STATUS_CODE).json({error : SERVER_ERROR_MESSAGE});
     }
     next();

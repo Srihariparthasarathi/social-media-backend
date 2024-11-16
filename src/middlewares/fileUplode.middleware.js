@@ -2,6 +2,8 @@ import multer from "multer";
 import ApplicationError from "./applicationError.middleware.js";
 
 const UNSUPPORTED_MEDIA_TYPE_CODE = 415;
+const INVALID_MIME_TYPE = "Invalid mime type. Only PNG, JPG, and JPEG files are supported.";
+const FILE_SIZE_EXCEED = "File size exceeds the 5MB limit.";
 
 const storage = multer.diskStorage({
     destination: function (req, file, cb) {
@@ -35,12 +37,19 @@ const upload = multer({
 const imageUploadMiddleware = (req, res, next) => {
     const uploadSingle = upload.single('image'); 
     uploadSingle(req, res, (err) => {
+
+        if(!err) return next();
+
         if (err instanceof multer.MulterError) {
-            return next(new ApplicationError(err.message, UNSUPPORTED_MEDIA_TYPE_CODE));
-        } else if (err) {
+            if (err.code === 'LIMIT_FILE_SIZE') {
+                return next(new ApplicationError(FILE_SIZE_EXCEED, UNSUPPORTED_MEDIA_TYPE_CODE));
+            } 
             return next(err);
+        } 
+        else if(err.message === "Invalid mime type"){
+            return next(new ApplicationError(INVALID_MIME_TYPE, UNSUPPORTED_MEDIA_TYPE_CODE));
         }
-        next(); 
+        return next(err);
     });
 };
 

@@ -3,8 +3,14 @@ import ApplicationError from "../../middlewares/applicationError.middleware.js";
 const NO_POST_IN_APPLICATION = "There are no posts yet. Be the first to share and make your mark!";
 const NO_POST_CREATED_BY_USER = "You haven't created any posts yet. Hurry up and share your first one!";
 const POST_NOT_FOUND = "Please check the post ID and try again. No post found with ID:";
+const FORBIDDEN_USER ="Forbidden, you don't have access to update this post"
 
 const POST_NOT_FOUND_CODE = 404;
+const FORBIDDEN_STATUS_CODE = 403;
+
+const PORT = 3100;
+const IMAGE_URL = `http://localhost:${PORT}/`
+
 
 
 export default class PostsModel{
@@ -32,11 +38,27 @@ export default class PostsModel{
         return posts;
     }
 
-    static addPost(userId, caption, imageUrl){
+    static addPost(userId, caption, filePath){
         let newId = (postList.length > 0) ? postList[postList.length-1].id + 1 : 1;
+
+        const imageUrl = IMAGE_URL + filePath.replace(/^public[\\/]/, "").replace(/\\/g, "/");
         const newPost = new PostsModel(newId, userId, caption, imageUrl);
         postList.push(newPost);
         return newPost;
+    }
+
+    static updatePost(postId, userId, caption, imageFile){
+        const postIndex = postList.findIndex((post) => post.id == postId);
+        if(postIndex == -1) throw new ApplicationError(`${POST_NOT_FOUND} ${postId}`, POST_NOT_FOUND_CODE);
+
+        const post = postList[postIndex];
+
+        if(post.userid != userId) throw new ApplicationError(FORBIDDEN_USER, FORBIDDEN_STATUS_CODE);
+        
+        if(caption) post.caption = caption;
+        if(imageFile) post.imageurl = IMAGE_URL + imageFile.path.replace(/^public[\\/]/, "").replace(/\\/g, "/");
+
+        return post;
     }
 
 }

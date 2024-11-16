@@ -1,7 +1,7 @@
 import ApplicationError from "../../middlewares/applicationError.middleware.js";
 
 const INVALID_CREDENTIALS_MESSAGE = "Invalid credentials. Please check your email and password and try again.";
-const INVALID_USERID_MESSAGE = "Invalid user ID. Please check the user ID and try again.";
+const INVALID_USERID_MESSAGE = "Invalid user ID or account deleted. Please check the user ID and try again";
 const UNAUTHORIZED_STATUS_CODE = 401;
 const INVALID_USERID_STATUS_CODE = 400;
 
