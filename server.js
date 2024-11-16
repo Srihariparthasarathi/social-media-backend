@@ -2,7 +2,7 @@
 import express from "express";
 import apiRouter from "./api.router.js";
 import swaggerUi from "swagger-ui-express";
-import path from "path"
+import path from "path";
 
 import swaggerDoc from "./swagger.json" assert { type: "json" };
 

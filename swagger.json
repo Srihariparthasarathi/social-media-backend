@@ -513,6 +513,102 @@
                   }
                 }
               }
+            },
+            "delete": {
+              "tags": ["Posts"],
+              "summary": "delete post",
+              "description": "Update post for the authenticated user with an image and caption. Requires a valid JWT token in the Authorization header.",
+              "parameters": [
+                {
+                  "name": "Authorization",
+                  "in": "header",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                    "example": "your_jwt_token_here"
+                  },
+                  "description": "JWT token for authentication"
+                },
+                {
+                  "name": "id",
+                  "in": "path",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                    "example": "1"
+                  },
+                  "description": "ID of the post to update"
+                }
+              ],
+              "responses": {
+                "204": {
+                  "description": "Post deleted"
+                },
+                "401": {
+                  "description": "Unauthorized - JWT missing or invalid",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "string",
+                            "example": "Authentication token is missing or invalid. Please provide a valid token in the Authorization header."
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "403": {
+                  "description": "Forbidden",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "string",
+                            "example": "Forbidden - You don't have access to delete this post"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "404": {
+                  "description": "Post not found",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "string",
+                            "example": "Please check the post ID and try again. No post found with ID: 1"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "400": {
+                  "description": "Bad Request - Invalid user ID or account deleted",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "string",
+                            "example": "Invalid user ID or account deleted. Please check the user ID and try again."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
             }
         },
         "/posts": {

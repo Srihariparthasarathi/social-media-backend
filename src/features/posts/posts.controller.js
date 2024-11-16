@@ -1,7 +1,10 @@
 import PostsModel from "./posts.model.js";
+import {deleteImageAfterPostDelete} from "../../middlewares/deleteImage.middleware.js"
 
 const RETURN_POST_SUCCESS_CODE = 200;
 const POST_CREATED_SUCCESS_CODE = 201;
+const NO_CONTENT_CODE = 204;
+
 
 export default class PostsController{
 
@@ -27,7 +30,7 @@ export default class PostsController{
         const userId = req.userId;
         const {caption} = req.body;
         const filePath = req.file.path;
-        const post = PostsModel.addPost(userId, caption, filePath);
+        const post = PostsModel.add(userId, caption, filePath);
         res.status(POST_CREATED_SUCCESS_CODE).json({ post: post});
 
     }
@@ -37,12 +40,19 @@ export default class PostsController{
         const {caption} = req.body;
         const postId = req.params["id"];
         const imageFile = req.file;
-        const post = PostsModel.updatePost(postId, userId, caption, imageFile);
+        const post = PostsModel.update(postId, userId, caption, imageFile);
         res.status(RETURN_POST_SUCCESS_CODE).json({ post: post});
     }
 
-    deletePost(req, res){
+     deletePost(req, res, next){
         const userId = req.userId;
-
-    }
+        const postId = req.params["id"];
+        try{
+            const post =  PostsModel.delete(postId, userId);
+            deleteImageAfterPostDelete(post, next);
+            return res.sendStatus(NO_CONTENT_CODE)
+        }catch(err){
+            next(err);
+        }
+     }
 }

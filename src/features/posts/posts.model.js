@@ -3,7 +3,9 @@ import ApplicationError from "../../middlewares/applicationError.middleware.js";
 const NO_POST_IN_APPLICATION = "There are no posts yet. Be the first to share and make your mark!";
 const NO_POST_CREATED_BY_USER = "You haven't created any posts yet. Hurry up and share your first one!";
 const POST_NOT_FOUND = "Please check the post ID and try again. No post found with ID:";
-const FORBIDDEN_USER ="Forbidden, you don't have access to update this post"
+const FORBIDDEN_USER_UPDATE ="Forbidden, you don't have access to update this post";
+const FORBIDDEN_USER_DELETE ="Forbidden, you don't have access to delete this post";
+const ERROE_UNABLE_TO_DELETE = "unable to delete the post with id";
 
 const POST_NOT_FOUND_CODE = 404;
 const FORBIDDEN_STATUS_CODE = 403;
@@ -38,7 +40,7 @@ export default class PostsModel{
         return posts;
     }
 
-    static addPost(userId, caption, filePath){
+    static add(userId, caption, filePath){
         let newId = (postList.length > 0) ? postList[postList.length-1].id + 1 : 1;
 
         const imageUrl = IMAGE_URL + filePath.replace(/^public[\\/]/, "").replace(/\\/g, "/");
@@ -47,18 +49,31 @@ export default class PostsModel{
         return newPost;
     }
 
-    static updatePost(postId, userId, caption, imageFile){
+    static update(postId, userId, caption, imageFile){
         const postIndex = postList.findIndex((post) => post.id == postId);
         if(postIndex == -1) throw new ApplicationError(`${POST_NOT_FOUND} ${postId}`, POST_NOT_FOUND_CODE);
 
         const post = postList[postIndex];
 
-        if(post.userid != userId) throw new ApplicationError(FORBIDDEN_USER, FORBIDDEN_STATUS_CODE);
+        if(post.userid != userId) throw new ApplicationError(FORBIDDEN_USER_UPDATE, FORBIDDEN_STATUS_CODE);
         
         if(caption) post.caption = caption;
         if(imageFile) post.imageurl = IMAGE_URL + imageFile.path.replace(/^public[\\/]/, "").replace(/\\/g, "/");
 
         return post;
+    }
+
+    static delete(postId, userId){
+        const postIndex = postList.findIndex((post) => post.id == postId);
+        if(postIndex == -1) throw new ApplicationError(`${POST_NOT_FOUND} ${postId}`, POST_NOT_FOUND_CODE);
+
+        if(postList[postIndex].userid != userId) throw new ApplicationError(FORBIDDEN_USER_DELETE, FORBIDDEN_STATUS_CODE);
+
+        const deletedPost = postList.splice(postIndex, 1);
+        if(!deletedPost) throw new Error(` ${ERROE_UNABLE_TO_DELETE} ${postId}`);
+        
+        return deletedPost[0];
+
     }
 
 }
