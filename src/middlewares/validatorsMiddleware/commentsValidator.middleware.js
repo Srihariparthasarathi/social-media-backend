@@ -42,4 +42,36 @@ const newCommentValidator = async (req, res, next) =>{
     next();
 };
 
-export { newCommentValidator };
+
+const updateCommentValidator = async (req, res, next) =>{
+    const rules = [
+        param('id')
+        .isInt({ min: 1 }) 
+        .withMessage('ID must be a positive integer'),
+        body('content')
+        .notEmpty()
+        .withMessage("content can not be empty")
+        .isString()
+        .trim()
+        .isLength({ min: 1, max: 500 })
+        .withMessage('Content must be between 1 and 500 characters long')
+        .custom((value) =>{
+            if (profanityList.some(word => value.toLowerCase().includes(word))) {
+                throw new Error("Caption contains prohibited words.");
+            }
+            return true;
+        })
+
+    ]
+
+    
+    await Promise.all(rules.map((rule)=> rule.run(req)));
+    const errors = validationResult(req);
+    const errorDetails = errors.array().map(error => error.msg).join(', ');
+    if (!errors.isEmpty()) return next(new ApplicationError(errorDetails, VALIDATION_FAIL_STATUS_CODE));
+
+    next();
+};
+
+
+export { newCommentValidator, updateCommentValidator };

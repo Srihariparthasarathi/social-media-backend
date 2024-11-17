@@ -22,7 +22,11 @@ export default class CommentsController{
     }
     
     updateComment(req, res){
-
+        const commentId = req.params["id"];
+        const userId = req.userId;
+        const {content} = req.body;
+        const updatedComment = CommentsModel.update(userId, Number(commentId), content);
+        return res.status(SUCCESS_CODE).json({comment : updatedComment});
     }
 
     deleteComment(req, res){

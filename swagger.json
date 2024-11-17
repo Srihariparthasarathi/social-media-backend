@@ -1002,7 +1002,151 @@
                     }
                   }
                 }
+            },
+            "put": {
+              "tags": ["comments"],
+              "summary": "Update comment by ID",
+              "description": "Update comment for the post with new content. Requires a valid JWT token in the Authorization header.",
+              "parameters": [
+                {
+                  "name": "id",
+                  "in": "path",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                    "example": "1"
+                  },
+                  "description": "ID of the comment to update"
+                },
+                {
+                  "name": "Authorization",
+                  "in": "header",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                    "example": "your_jwt_token_here"
+                  },
+                  "description": "JWT token for authentication"
+                }
+              ],
+              "requestBody": {
+                "required": true,
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "content": {
+                          "type": "string",
+                          "description": "update the Comment for the post. Must be 1-500 characters long and must not contain prohibited words.",
+                          "example": "looks good"
+                        }
+                      },
+                      "required": ["content"]
+                    }
+                  }
+                }
+              },
+              "responses": {
+                "200": {
+                  "description": "Comment updated",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "userId": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "postId": {
+                            "type": "integer",
+                            "example": 1
+                          },
+                          "content": {
+                            "type": "string",
+                            "example": "wonderful post"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "400": {
+                  "description": "Bad Request - Validation failed",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "string",
+                            "examples": [
+                              "Content cannot be empty.",
+                              "Invalid value: Content must be between 1 and 500 characters long.",
+                              "Invalid user ID or account deleted. Please check the user ID and try again."
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "401": {
+                  "description": "Unauthorized - JWT missing or invalid",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "string",
+                            "example": "Authentication token is missing or invalid. Please provide a valid token in the Authorization header."
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "403": {
+                  "description": "Forbidden",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "string",
+                            "example": "Forbidden - You don't have access to update this comment"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "404": {
+                  "description": "comment not found",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "string",
+                            "example": "Please check the comment ID and try again. No comment found with ID: 123."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
               }
+            }
+
         }
 
       }
