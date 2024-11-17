@@ -820,7 +820,7 @@
             }
         },
         "/comments/{id}": {
-  "get": {
+            "get": {
     "tags": ["comments"],
     "summary": "Retrieve all comments based on Post ID",
     "description": "Fetches comments by Post ID. If comments exist, it returns all comments belonging to the specified post. Otherwise, it returns a 404 error.",
@@ -890,7 +890,119 @@
         }
       }
     }
-  }
+            },
+            "post": {
+                "tags": ["comments"],
+                "summary": "Create new comment for post",
+                "description": "Create a new comment for the post with content. Requires a valid JWT token in the Authorization header.",
+                "parameters": [
+                  {
+                    "name": "id",
+                    "in": "path",
+                    "required": true,
+                    "schema": {
+                      "type": "string",
+                      "example": "1"
+                    },
+                    "description": "ID of the post to create a comment for"
+                  },
+                  {
+                    "name": "Authorization",
+                    "in": "header",
+                    "required": true,
+                    "schema": {
+                      "type": "string",
+                      "example": "your_jwt_token_here"
+                    },
+                    "description": "JWT token for authentication"
+                  }
+                ],
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "content": {
+                            "type": "string",
+                            "description": "Comment for the post. Must be 1-500 characters long and must not contain prohibited words.",
+                            "example": "wonderful post"
+                          }
+                        },
+                        "required": ["content"]
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "201": {
+                    "description": "Comment Created",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "userId": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "postId": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "content": {
+                              "type": "string",
+                              "example": "wonderful post"
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "400": {
+                    "description": "Bad Request - Validation failed",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "error": {
+                              "type": "string",
+                              "examples": [
+                                "Content cannot be empty.",
+                                "Invalid value: Content must be between 1 and 500 characters long.",
+                                "Please check the post ID and try again. No post found with ID: 3.",
+                                "Invalid user ID or account deleted. Please check the user ID and try again."
+                              ]
+                            }
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "401": {
+                    "description": "Unauthorized - JWT missing or invalid",
+                    "content": {
+                      "application/json": {
+                        "schema": {
+                          "type": "object",
+                          "properties": {
+                            "error": {
+                              "type": "string",
+                              "example": "Authentication token is missing or invalid. Please provide a valid token in the Authorization header."
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
         }
 
       }

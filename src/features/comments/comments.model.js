@@ -19,6 +19,13 @@ export default class CommentsModel{
         return comments;
     }
 
+    static create(userId, postId, comment){
+        let newId = (commentList.length > 0) ? commentList[commentList.length-1].id + 1 : 1;
+        const newComment = new CommentsModel(newId, userId, postId, comment);
+        commentList.push(newComment);
+        return newComment;
+    }
+
 }
 
 const commentList = [
