@@ -3,6 +3,7 @@ import ApplicationError from "../../middlewares/applicationError.middleware.js";
 
 const NO_DRAFT_ITEM_CREATED = "You haven't created any Draft item yet";
 const DRAFT_ITEM_NOT_FOUND = "Please check the Draft ID and try again. No Draft item found with ID:";
+const FORBIDDEN_USER = "Forbidden, you don't have access to this Draft item";
 const FORBIDDEN_USER_UPDATE ="Forbidden, you don't have access to update this Draft item";
 const FORBIDDEN_USER_DELETE ="Forbidden, you don't have access to delete this Draft item";
 const ERROE_UNABLE_TO_DELETE = "unable to delete the post with id";
@@ -27,6 +28,15 @@ export default class DraftsModel{
         const drafts = draftsList.filter((draft) => draft.userId == userId);
         if(drafts.length == 0) throw new ApplicationError(`${NO_DRAFT_ITEM_CREATED}`, NOT_FOUND_CODE);
         return drafts;
+    }
+
+    static getById(id, userId){
+        const draft = draftsList.find((draft) => draft.id == id);
+        if(!draft) throw new ApplicationError(`${DRAFT_ITEM_NOT_FOUND} ${id}`, NOT_FOUND_CODE);
+
+        if(draft.userId !== userId) throw new ApplicationError(`${FORBIDDEN_USER}`, FORBIDDEN_STATUS_CODE);
+
+        return draft;
     }
 
 }

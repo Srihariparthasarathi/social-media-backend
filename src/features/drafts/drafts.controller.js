@@ -10,11 +10,13 @@ export default class DraftsController{
         const userId = req.userId;
         const drafts = DraftsModel.getByUserId(userId);
         res.status(SUCCESS_CODE).json({draftItems: drafts})
-
     }
 
     getDraftItemById(req, res){
-
+        const userId = req.userId;
+        const draftId = req.params["id"];
+        const draftItem = DraftsModel.getById(draftId, userId);
+        res.status(SUCCESS_CODE).json({draftItem : draftItem});
     }
 
     createDraftItem(req, res){

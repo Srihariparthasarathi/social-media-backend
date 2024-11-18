@@ -1669,7 +1669,7 @@
                     "schema": {
                       "type": "object",
                       "properties": {
-                        "posts": {
+                        "draftItems": {
                           "type": "array",
                           "items": {
                             "type": "object",
@@ -1698,8 +1698,8 @@
                   }
                 }
               },
-              "404": {
-                "description": "No Drafts found",
+              "400": {
+                "description": "Bad Request - Invalid user ID or account deleted",
                 "content": {
                   "application/json": {
                     "schema": {
@@ -1707,7 +1707,7 @@
                       "properties": {
                         "error": {
                           "type": "string",
-                          "example": "You haven't created any Draft item yet"
+                          "example": "Invalid user ID or account deleted. Please check the user ID and try again."
                         }
                       }
                     }
@@ -1724,6 +1724,38 @@
                         "error": {
                           "type": "string",
                           "example": "Authentication token is missing. Please provide a valid token in the Authorization header."
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "403": {
+                "description": "Forbidden",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Forbidden - You don't have access to update this post"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "404": {
+                "description": "No Drafts found",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "You haven't created any Draft item yet"
                         }
                       }
                     }
@@ -1843,6 +1875,385 @@
                         "error": {
                           "type": "string",
                           "example": "Invalid mime type. Only PNG, JPG, and JPEG files are supported or File size exceeds the 5MB limit."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "/drafts/{id}": {
+          "get": {
+            "tags": ["Drafts"],
+            "summary": "Get a Draft item by its ID",
+            "description": "Fetches a Draft item by its ID. If the Draft exists, it returns the Draft item's details. Otherwise, it returns a 404 error.",
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                  "type": "integer",
+                  "example": 1
+                },
+                "description": "ID of the post"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Draft Item found",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "draftItem": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "userid": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "caption": {
+                                "type": "string",
+                                "example": "My first Draft on this platform!"
+                              },
+                              "imageurl": {
+                                "type": "string",
+                                "example": "http://example.com/image1.jpg"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "400": {
+                "description": "Bad Request - Invalid user ID or account deleted",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Invalid user ID or account deleted. Please check the user ID and try again."
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "401": {
+                "description": "Unauthorized - JWT missing or invalid",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Authentication token is missing or invalid. Please provide a valid token in the Authorization header."
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "403": {
+                "description": "Forbidden",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Forbidden - You don't have access"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "404": {
+                "description": "Draft Item not found",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Please check the Draft ID and try again. No Draft found with ID: 3"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "put": {
+            "tags": ["Posts"],
+            "summary": "Update post",
+            "description": "Update post for the authenticated user with an image and caption. Requires a valid JWT token in the Authorization header.",
+            "parameters": [
+              {
+                "name": "Authorization",
+                "in": "header",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "example": "your_jwt_token_here"
+                },
+                "description": "JWT token for authentication"
+              },
+              {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "example": "1"
+                },
+                "description": "ID of the post to update"
+              }
+            ],
+            "requestBody": {
+              "required": false,
+              "content": {
+                "multipart/form-data": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "Image file to upload. Supported formats: PNG, JPG, JPEG.",
+                        "example": "example.png",
+                        "nullable": true
+                      },
+                      "caption": {
+                        "type": "string",
+                        "description": "Caption for the post. Must be between 5 and 2200 characters, cannot contain prohibited words, too many hashtags (max 30), emojis (max 50), or special symbols.",
+                        "example": "My first post on this platform!",
+                         "nullable": true
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "responses": {
+              "200": {
+                "description": "Post updated",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "userid": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "caption": {
+                          "type": "string",
+                          "example": "My first post on this platform!"
+                        },
+                        "imageurl": {
+                          "type": "string",
+                          "example": "http://example.com/image1.jpg"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "401": {
+                "description": "Unauthorized - JWT missing or invalid",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Authentication token is missing or invalid. Please provide a valid token in the Authorization header."
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "403": {
+                "description": "Forbidden",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Forbidden - You don't have access to update this post"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "404": {
+                "description": "Post not found",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Please check the post ID and try again. No post found with ID: 123."
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "400": {
+                "description": "Bad Request - Invalid user ID or account deleted",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Invalid user ID or account deleted. Please check the user ID and try again."
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "415": {
+                "description": "Unsupported Media Type and size exceed",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Invalid mime type. Only PNG, JPG, and JPEG files are supported or File size exceeds the 5MB limit."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "delete": {
+            "tags": ["Posts"],
+            "summary": "delete post",
+            "description": "delete post for the authenticated user. Requires a valid JWT token in the Authorization header.",
+            "parameters": [
+              {
+                "name": "Authorization",
+                "in": "header",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "example": "your_jwt_token_here"
+                },
+                "description": "JWT token for authentication"
+              },
+              {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "example": "1"
+                },
+                "description": "ID of the post to delete"
+              }
+            ],
+            "responses": {
+              "204": {
+                "description": "Post deleted"
+              },
+              "401": {
+                "description": "Unauthorized - JWT missing or invalid",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Authentication token is missing or invalid. Please provide a valid token in the Authorization header."
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "403": {
+                "description": "Forbidden",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Forbidden - You don't have access to delete this post"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "404": {
+                "description": "Post not found",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Please check the post ID and try again. No post found with ID: 1"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "400": {
+                "description": "Bad Request - Invalid user ID or account deleted",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Invalid user ID or account deleted. Please check the user ID and try again."
                         }
                       }
                     }

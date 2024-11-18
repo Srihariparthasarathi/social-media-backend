@@ -13,7 +13,7 @@ const draftsController = new DraftsController();
 
 router.get("/",jwtAuth, isUserExistsMiddleware, draftsController.getAllDraftsByUserId);
 router.post("/");
-router.get("/:id");
+router.get("/:id", jwtAuth, isUserExistsMiddleware, draftsController.getDraftItemById);
 router.put("/:id");
 router.delete("/:id");
 router.post("/archive/:id");
