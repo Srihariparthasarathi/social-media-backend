@@ -18,6 +18,20 @@ export default class LikesModel{
 
     static toggle(userId, postId){
 
+        const likeIndex = likesList.findIndex((like) => like.userId == userId && like.postId == postId);
+        let liked = false;
+        
+        if(likeIndex == -1){
+            let newId = (likesList.length > 0) ? likesList[likesList.length-1].id + 1 : 1;
+            const newlike = new LikesModel(newId, postId, userId);
+            likesList.push(newlike)
+            liked = true;
+        }else{
+            likesList.splice(likeIndex, 1);
+        }
+
+        return{ liked: liked, postId: postId}
+
     }
 }
 
