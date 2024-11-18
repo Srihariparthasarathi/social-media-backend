@@ -4,7 +4,7 @@ import jwtAuth from "../../middlewares/jwtAuth.middleware.js";
 import imageUploadMiddleware from "../../middlewares/fileUplode.middleware.js";
 import { createPostValidator, updatePostValidator  } from "../../middlewares/validatorsMiddleware/postValidator.middleware.js"
 import deletePreviousImage from "../../middlewares/deleteImage.middleware.js";
-import isUserExistsMiddleware from "../../middlewares/isUserExists.middleware.js"
+import isUserExistsMiddleware from "../../middlewares/isUserExists.middleware.js";
 
 
 import PostsController from "./posts.controller.js";
