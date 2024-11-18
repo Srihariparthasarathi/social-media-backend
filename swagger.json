@@ -821,75 +821,75 @@
         },
         "/comments/{id}": {
             "get": {
-    "tags": ["comments"],
-    "summary": "Retrieve all comments based on Post ID",
-    "description": "Fetches comments by Post ID. If comments exist, it returns all comments belonging to the specified post. Otherwise, it returns a 404 error.",
-    "parameters": [
-      {
-        "name": "id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "string",
-          "example": "1"
-        },
-        "description": "ID of the post to retrieve comments for"
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "Comments retrieved successfully",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "posts": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "userId": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "postId": {
-                        "type": "integer",
-                        "example": 1
-                      },
-                      "content": {
-                        "type": "string",
-                        "example": "Amazing post!"
+            "tags": ["comments"],
+            "summary": "Retrieve all comments based on Post ID",
+            "description": "Fetches comments by Post ID. If comments exist, it returns all comments belonging to the specified post. Otherwise, it returns a 404 error.",
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "example": "1"
+                },
+                "description": "ID of the post to retrieve comments for"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Comments retrieved successfully",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "posts": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "userId": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "postId": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "content": {
+                                "type": "string",
+                                "example": "Amazing post!"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "404": {
+                "description": "Comments not found for this post",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Please check the post ID and try again. No comments found for post ID: 3"
+                        }
                       }
                     }
                   }
                 }
               }
-            }
-          }
-        }
-      },
-      "404": {
-        "description": "Comments not found for this post",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "example": "Please check the post ID and try again. No comments found for post ID: 3"
-                }
               }
-            }
-          }
-        }
-      }
-    }
             },
             "post": {
                 "tags": ["comments"],
@@ -1242,8 +1242,95 @@
                 }
               }
             }
-
-        }
+        },
+        "likes/{id}": {
+            "get": {
+              "tags": ["likes"],
+              "summary": "Retrieve all Likes for a Post",
+              "description": "Fetches all likes for a specific post by its ID. Returns a list of likes if found, or a 404 error if no likes exist.",
+              "parameters": [
+                {
+                  "name": "id",
+                  "in": "path",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                    "example": "1"
+                  },
+                  "description": "ID of the post to retrieve likes for"
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "Likes retrieved successfully",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "likes": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "userId": {
+                                  "type": "integer",
+                                  "example": 1
+                                },
+                                "postId": {
+                                  "type": "integer",
+                                  "example": 1
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "400": {
+                  "description": "Bad Request - Invalid Post ID or Validation Failed",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "string",
+                            "examples": [
+                              "Invalid post ID format. Please provide a valid numeric ID.",
+                              "No post found with ID: 3."
+                            ]
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "404": {
+                  "description": "No Likes Found for this Post",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "string",
+                            "example": "There are no likes for the post with ID: 3."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+        }      
 
       }
 }
