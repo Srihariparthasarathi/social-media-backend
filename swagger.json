@@ -1765,9 +1765,9 @@
             }
           },
           "post": {
-            "tags": ["Posts"],
-            "summary": "Create new post",
-            "description": "Create a new post for the authenticated user with an image and caption. Requires a valid JWT token in the Authorization header.",
+            "tags": ["Drafts"],
+            "summary": "Create new Draft Item",
+            "description": "Create a new Draft for the authenticated user with an image and caption. Requires a valid JWT token in the Authorization header.",
             "parameters": [
               {
                 "name": "Authorization",
@@ -1806,7 +1806,7 @@
             },
             "responses": {
               "201": {
-                "description": "Post Created",
+                "description": "Draft Item created",
                 "content": {
                   "application/json": {
                     "schema": {
@@ -1822,7 +1822,7 @@
                         },
                         "caption": {
                           "type": "string",
-                          "example": "My first post on this platform!"
+                          "example": "My first draft on this platform!"
                         },
                         "imageurl": {
                           "type": "string",

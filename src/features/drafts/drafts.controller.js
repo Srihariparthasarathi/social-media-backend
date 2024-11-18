@@ -20,6 +20,11 @@ export default class DraftsController{
     }
 
     createDraftItem(req, res){
+        const userId = req.userId;
+        const {caption} = req.body;
+        const filePath = req.file.path;
+        const draftItem = DraftsModel.add(userId, caption, filePath);
+        res.status(SUCCESS_CODE).json({draftItem : draftItem});
 
     }
 

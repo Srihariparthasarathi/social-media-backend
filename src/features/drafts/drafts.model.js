@@ -39,6 +39,15 @@ export default class DraftsModel{
         return draft;
     }
 
+    static add(userId, caption, filePath){
+        let newId = (draftsList.length > 0) ? draftsList[draftsList.length-1].id + 1 : 1;
+
+        const imageUrl = IMAGE_URL + filePath.replace(/^public[\\/]/, "").replace(/\\/g, "/");
+        const newDraftItem = new DraftsModel(newId, userId, caption, imageUrl);
+        draftsList.push(newDraftItem);
+        return newDraftItem;
+    }
+
 }
 
 const draftsList = [
