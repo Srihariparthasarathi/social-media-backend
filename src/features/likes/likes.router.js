@@ -4,10 +4,13 @@ import jwtAuth from "../../middlewares/jwtAuth.middleware.js";
 
 import isUserExistsMiddleware from "../../middlewares/isUserExists.middleware.js";
 
-const router = express.Router();
+import LikesController from "./likes.controller.js";
 
-router.get("/:id");
-router.get("/toggle/:id");
+const router = express.Router();
+const likesController = new LikesController();
+
+router.get("/:id",likesController.getLikesByPostId);
+router.get("/toggle/:id",jwtAuth,isUserExistsMiddleware, likesController.toggleLikes);
 
 
 
