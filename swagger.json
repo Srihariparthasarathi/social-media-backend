@@ -1534,7 +1534,7 @@
             }
           }
         },
-      "/bookmarks/toggle/{id}": {
+        "/bookmarks/toggle/{id}": {
         "get": {
           "tags": ["bookmarks"],
           "summary": "Toggle bookmark for a Post",
@@ -1643,7 +1643,215 @@
             }
           }
         }
-        }
+        },
+        "/drafts": {
+          "get": {
+            "tags": ["Drafts"],
+            "summary": "Get all Drafts for Authenticated user",
+            "description": "Fetches all Draft items of the authenticated user. If no draft Item are created, a message is returned. Requires a valid JWT token in the Authorization header.",
+            "parameters": [
+              {
+                  "name": "Authorization",
+                  "in": "header",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                    "example": "your_jwt_token_here"
+                  },
+                  "description": "JWT token for authentication"
+                }
+            ],
+            "responses": {
+              "200": {
+                "description": "Drafts found",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "posts": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "userid": {
+                                "type": "integer",
+                                "example": 1
+                              },
+                              "caption": {
+                                "type": "string",
+                                "example": "this is my first draft item"
+                              },
+                              "imageurl": {
+                                "type": "string",
+                                "example": "http://example.com/image1.jpg"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "404": {
+                "description": "No Drafts found",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "You haven't created any Draft item yet"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "401": {
+                "description": "Unauthorized - JWT missing or invalid",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Authentication token is missing. Please provide a valid token in the Authorization header."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "post": {
+            "tags": ["Posts"],
+            "summary": "Create new post",
+            "description": "Create a new post for the authenticated user with an image and caption. Requires a valid JWT token in the Authorization header.",
+            "parameters": [
+              {
+                "name": "Authorization",
+                "in": "header",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "example": "your_jwt_token_here"
+                },
+                "description": "JWT token for authentication"
+              }
+            ],
+            "requestBody": {
+              "required": true,
+              "content": {
+                "multipart/form-data": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "image": {
+                        "type": "string",
+                        "format": "binary",
+                        "description": "Image file to upload. Supported formats: PNG, JPG, JPEG.",
+                        "example": "example.png"
+                      },
+                      "caption": {
+                        "type": "string",
+                        "description": "Caption for the post. Must be between 5 and 2200 characters, cannot contain prohibited words, too many hashtags (max 30), emojis (max 50), or special symbols.",
+                        "example": "My first post on this platform!"
+                      }
+                    },
+                    "required": ["image", "caption"]
+                  }
+                }
+              }
+            },
+            "responses": {
+              "201": {
+                "description": "Post Created",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "userid": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "caption": {
+                          "type": "string",
+                          "example": "My first post on this platform!"
+                        },
+                        "imageurl": {
+                          "type": "string",
+                          "example": "http://example.com/image1.jpg"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "400": {
+                "description": "Bad Request - Validation failed",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Caption must be between 5 and 2200 characters. Caption contains prohibited words or exceeds limits for hashtags, emojis, or special symbols."
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "401": {
+                "description": "Unauthorized - JWT missing or invalid",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Authentication token is missing or invalid. Please provide a valid token in the Authorization header."
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "415": {
+                "description": "Unsupported Media Type and size exceed",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Invalid mime type. Only PNG, JPG, and JPEG files are supported or File size exceeds the 5MB limit."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+      }
 
       }
 }

@@ -6,9 +6,12 @@ import imageUploadMiddleware from "../../middlewares/fileUplode.middleware.js";
 import deletePreviousImage from "../../middlewares/deleteImage.middleware.js";
 import isUserExistsMiddleware from "../../middlewares/isUserExists.middleware.js";
 
-const router = express.Router();
+import DraftsController from "./drafts.controller.js";
 
-router.get("/");
+const router = express.Router();
+const draftsController = new DraftsController();
+
+router.get("/",jwtAuth, isUserExistsMiddleware, draftsController.getAllDraftsByUserId);
 router.post("/");
 router.get("/:id");
 router.put("/:id");

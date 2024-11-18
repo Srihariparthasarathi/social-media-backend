@@ -1,0 +1,37 @@
+import ApplicationError from "../../middlewares/applicationError.middleware.js";
+
+
+const NO_DRAFT_ITEM_CREATED = "You haven't created any Draft item yet";
+const DRAFT_ITEM_NOT_FOUND = "Please check the Draft ID and try again. No Draft item found with ID:";
+const FORBIDDEN_USER_UPDATE ="Forbidden, you don't have access to update this Draft item";
+const FORBIDDEN_USER_DELETE ="Forbidden, you don't have access to delete this Draft item";
+const ERROE_UNABLE_TO_DELETE = "unable to delete the post with id";
+
+const NOT_FOUND_CODE = 404;
+const FORBIDDEN_STATUS_CODE = 403;
+
+const PORT = 3100;
+const IMAGE_URL = `http://localhost:${PORT}/`
+
+
+
+export default class DraftsModel{
+    constructor(id, userId, caption, imageUrl){
+        this.id = id;
+        this.userId = userId;
+        this.caption = caption;
+        this.imageUrl = imageUrl;
+    }
+
+    static getByUserId(userId){
+        const drafts = draftsList.filter((draft) => draft.userId == userId);
+        if(drafts.length == 0) throw new ApplicationError(`${NO_DRAFT_ITEM_CREATED}`, NOT_FOUND_CODE);
+        return drafts;
+    }
+
+}
+
+const draftsList = [
+    new DraftsModel(1, 1, "this is my first draft item", "http://example.com/image1.jpg"),
+    new DraftsModel(2, 1, "this is my second draft item", "http://example.com/image2.jpg"),
+]
