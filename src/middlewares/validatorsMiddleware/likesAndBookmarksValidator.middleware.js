@@ -1,8 +1,10 @@
 // OM NAMASIVIYA
 import PostModel from "../../features/posts/posts.model.js";
+import { param, validationResult } from "express-validator";
+import ApplicationError from "../applicationError.middleware.js";
 
 const POST_NOT_FOUND = "Please check the post ID and try again. No post found with ID:"
-const VALIDATION_FAIL_STATUS_CODE = 400;
+const VALIDATION_FAIL_STATUS_CODE = 404;
 
 export default  async function checkPostExists(req, res, next){
     const rules = [

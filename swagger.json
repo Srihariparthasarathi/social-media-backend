@@ -1243,7 +1243,7 @@
               }
             }
         },
-        "likes/{id}": {
+        "/likes/{id}": {
             "get": {
               "tags": ["likes"],
               "summary": "Retrieve all Likes for a Post",
@@ -1331,7 +1331,7 @@
               }
             }
         },
-        "likes/toggle/{id}": {
+        "/likes/toggle/{id}": {
           "get": {
             "tags": ["likes"],
             "summary": "Toggle Like for a Post",
@@ -1432,7 +1432,218 @@
               }
             }
           }
-        }       
+        },
+        "/bookmarks/{id}": {
+          "get": {
+            "tags": ["bookmarks"],
+            "summary": "bookmarks status",
+            "description": "Return Bookmark status of specific post by its ID  for the authenticated user.",
+            "parameters": [
+              {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "example": "1"
+                },
+                "description": "ID of the post to retrieve bookmark status for"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "bookmark status retrieved successfully",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "bookMark": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "isBookMark": {
+                                "type": "boolean",
+                                "example": true
+                              },
+                              "postId": {
+                                "type": "integer",
+                                "example": 1
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "400": {
+                "description": "Bad Request - Invalid Post ID or Validation Failed",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "examples": [
+                            "Invalid post ID format. Please provide a valid numeric ID.",
+                            "No post found with ID: 3.",
+                            "Invalid user ID or account deleted. Please check the user ID and try again"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "401": {
+                "description": "Unauthorized - JWT missing or invalid",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Authentication token is missing or invalid. Please provide a valid token."
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "404": {
+                "description": "Post not found",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Please check the post ID and try again. No post found with ID: 3"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+      "/bookmarks/toggle/{id}": {
+        "get": {
+          "tags": ["bookmarks"],
+          "summary": "Toggle bookmark for a Post",
+          "description": "Toggles the bookmark status for a post for the authenticated user. If the post is already bookmarked, it will remove the bookmark; otherwise, it will add a bookmark. Requires user authentication.",
+          "parameters": [
+            {
+              "name": "id",
+              "in": "path",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "example": "1"
+              },
+              "description": "ID of the post for which the like status is toggled."
+            },
+            {
+              "name": "Authorization",
+              "in": "header",
+              "required": true,
+              "schema": {
+                "type": "string",
+                "example": "your_jwt_token_here"
+              },
+              "description": "JWT token for authenticating the user."
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "bookmark toggled successfully",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "bookMark": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "isBookMark": {
+                              "type": "boolean",
+                              "example": true
+                            },
+                            "postId": {
+                              "type": "integer",
+                              "example": 1
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "400": {
+              "description": "Bad Request - Invalid Post ID or Validation Failed",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "examples": [
+                          "Invalid post ID format. Please provide a valid numeric ID.",
+                          "No post found with ID: 3."
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "401": {
+              "description": "Unauthorized - JWT missing or invalid",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "example": "Authentication token is missing or invalid. Please provide a valid token."
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "404": {
+              "description": "Post Not Found",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "type": "object",
+                    "properties": {
+                      "error": {
+                        "type": "string",
+                        "example": "No post found with ID: 3."
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+        }
 
       }
 }
