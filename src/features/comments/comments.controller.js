@@ -2,6 +2,7 @@ import CommentsModel from "./comments.model.js";
 
 const SUCCESS_CODE = 200;
 const CREATE_SUCCESS_CODE = 201;
+const NO_CONTENT_CODE = 204;
 
 export default class CommentsController{
 
@@ -30,6 +31,9 @@ export default class CommentsController{
     }
 
     deleteComment(req, res){
-
+        const commentId = req.params["id"];
+        const userId = req.userId;
+        const deletedComment = CommentsModel.delete(userId, Number(commentId));
+        return res.sendStatus(NO_CONTENT_CODE);
     }
 }

@@ -12,7 +12,7 @@ const commentsController = new CommentsController();
 router.get("/:id", commentsController.getAllComments);
 router.post("/:id", jwtAuth,isUserExistsMiddleware, newCommentValidator, commentsController.createComment);
 router.put("/:id", jwtAuth, isUserExistsMiddleware, updateCommentValidator, commentsController.updateComment);
-router.delete("/:id");
+router.delete("/:id", jwtAuth, isUserExistsMiddleware, commentsController.deleteComment);
 
 
 

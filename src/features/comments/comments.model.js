@@ -1,3 +1,5 @@
+import PostsModel from "../posts/posts.model.js";
+
 import ApplicationError from "../../middlewares/applicationError.middleware.js";
 
 const NO_COMMENTS_FOUND_FOR_USER = "Comments not fount for this postId:";
@@ -7,8 +9,6 @@ const FORBIDDEN_USER_DELETE ="Forbidden, you don't have access to delete this co
 
 const NOT_FOUND_CODE = 404;
 const FORBIDDEN_STATUS_CODE = 403;
-
-
 
 
 export default class CommentsModel{
@@ -39,11 +39,23 @@ export default class CommentsModel{
 
         const comment = commentList[commentIndex];
         
-        if(comment.userId !== userId) throw new ApplicationError(`${FORBIDDEN_USER_UPDATE}`, FORBIDDEN_STATUS_CODE);
+        if(comment.userId !== userId) throw new ApplicationError(`${FORBIDDEN_USER_DELETE}`, FORBIDDEN_STATUS_CODE);
 
         commentList[commentIndex].content = content;
 
         return comment;
+    }
+
+    static delete(userId, commentId){
+        const commentIndex = commentList.findIndex((comment) => comment.id == commentId);
+        if(commentIndex == -1) throw new ApplicationError(`${NO_COMMENT_FOUND} ${commentId}`, NOT_FOUND_CODE);
+
+        const comment = commentList[commentIndex];
+        const postUserId = PostsModel.getByPostId(comment.postId).userid;
+        if(comment.userId !== userId && userId !== postUserId) throw new ApplicationError(`${FORBIDDEN_USER_UPDATE}`, FORBIDDEN_STATUS_CODE);
+
+        return commentList.splice(commentIndex, 1);
+
     }
 
 }

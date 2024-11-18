@@ -517,7 +517,7 @@
             "delete": {
               "tags": ["Posts"],
               "summary": "delete post",
-              "description": "Update post for the authenticated user with an image and caption. Requires a valid JWT token in the Authorization header.",
+              "description": "delete post for the authenticated user. Requires a valid JWT token in the Authorization header.",
               "parameters": [
                 {
                   "name": "Authorization",
@@ -537,7 +537,7 @@
                     "type": "string",
                     "example": "1"
                   },
-                  "description": "ID of the post to update"
+                  "description": "ID of the post to delete"
                 }
               ],
               "responses": {
@@ -1138,6 +1138,102 @@
                           "error": {
                             "type": "string",
                             "example": "Please check the comment ID and try again. No comment found with ID: 123."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "delete": {
+              "tags": ["comments"],
+              "summary": "delete comment based of ID",
+              "description": "Deletes a comment for the authenticated user. Only the comment's creator or the post owner can perform this action. Requires a valid JWT token in the Authorization header.",
+              "parameters": [
+                {
+                  "name": "Authorization",
+                  "in": "header",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                    "example": "your_jwt_token_here"
+                  },
+                  "description": "JWT token for authentication"
+                },
+                {
+                  "name": "id",
+                  "in": "path",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                    "example": "1"
+                  },
+                  "description": "ID of the comment to delete"
+                }
+              ],
+              "responses": {
+                "204": {
+                  "description": "comment deleted"
+                },
+                "401": {
+                  "description": "Unauthorized - JWT missing or invalid",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "string",
+                            "example": "Authentication token is missing or invalid. Please provide a valid token in the Authorization header."
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "403": {
+                  "description": "Forbidden",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "string",
+                            "example": "Forbidden - You don't have access to delete this comment"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "404": {
+                  "description": "comment not found",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "string",
+                            "example": "Please check the comment ID and try again. No comment found with ID: 1"
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "400": {
+                  "description": "Bad Request - Invalid user ID or account deleted",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "string",
+                            "example": "Invalid user ID or account deleted. Please check the user ID and try again."
                           }
                         }
                       }
