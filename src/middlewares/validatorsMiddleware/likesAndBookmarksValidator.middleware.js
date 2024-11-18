@@ -4,7 +4,7 @@ import { param, validationResult } from "express-validator";
 import ApplicationError from "../applicationError.middleware.js";
 
 const POST_NOT_FOUND = "Please check the post ID and try again. No post found with ID:"
-const VALIDATION_FAIL_STATUS_CODE = 404;
+const VALIDATION_FAIL_STATUS_CODE = 400;
 
 export default  async function checkPostExists(req, res, next){
     const rules = [
@@ -13,8 +13,7 @@ export default  async function checkPostExists(req, res, next){
         .withMessage('ID must be a positive integer')
         .custom((value) =>{
             const post = PostModel.getByPostId(value);
-            if(!post) throw new Error(`${POST_NOT_FOUND} ${value}`);
-            return true;
+            if(post) return true;
         }),
     ]
 
