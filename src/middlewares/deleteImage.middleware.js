@@ -1,26 +1,37 @@
 import PostsModel from "../features/posts/posts.model.js";
+import DeaftModel from "../features/drafts/drafts.model.js"
 import fs from "fs";
 import path from "path";
 
-export default function deletePreviousImage(req, res, next){
-    if(req.file){
-        const postId = req.params["id"];
+const POST_FEATURE_TYPE = "posts";
+const DRAFT_FEATURE_TYPE = "drafts";
+
+export default function deletePreviousImage(featureType){
+    return function(req, res, next){
+
+        if(!req.file) return next();
+
+        const entityId = req.params['id'];
         const userId = req.userId;
 
-        const post = PostsModel.getByPostId(postId);
-        if(post.userid !== userId || !post) next();
-        
-        const imageName = post.imageurl.split("/").pop();
-        fs.unlink(path.resolve("public", "media", imageName), (err)=>{ fileDeleteErrorHandler(err, next)});
+        try{
+            let entity = (featureType == POST_FEATURE_TYPE) ? PostsModel.getById(entityId) : DeaftModel.getById(entityId, userId);
+            const imageName = entity.imageurl.split("/").pop();
+            fs.unlink(path.resolve("public", "media", imageName), (err)=>{ fileDeleteErrorHandler(err, next)});
+        }catch(err){
+            fs.unlink(path.resolve(req.file.path), (err)=>{ fileDeleteErrorHandler(err, next)});
+            next(err);
+        }
+
+        next();
+
     }
-
-    next()
-
 }
 
 
-const deleteImageAfterPostDelete = (post, next)=>{
-    const imageName = post.imageurl.split("/").pop();
+
+const deleteImageAfterPostOrDraftDelete = (entity, next)=>{
+    const imageName = entity.imageurl.split("/").pop();
     fs.unlink(path.resolve("public", "media", imageName), (err)=>{ fileDeleteErrorHandler(err, next)});
 }
 
@@ -35,5 +46,5 @@ const fileDeleteErrorHandler = (err, next)=>{
 
 
 export {
-    deleteImageAfterPostDelete
+    deleteImageAfterPostOrDraftDelete
 }

@@ -11,7 +11,7 @@ export default  async function checkPostExists(req, res, next){
         .isInt({ min: 1 }) 
         .withMessage('ID must be a positive integer')
         .custom((value) =>{
-            const post = PostModel.getByPostId(value);
+            const post = PostModel.getById(value);
             if(post) return true;
         }),
     ]

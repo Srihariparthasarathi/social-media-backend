@@ -19,13 +19,13 @@ const IMAGE_URL = `http://localhost:${PORT}/`
 export default class DraftsModel{
     constructor(id, userId, caption, imageUrl){
         this.id = id;
-        this.userId = userId;
+        this.userid = userId;
         this.caption = caption;
-        this.imageUrl = imageUrl;
+        this.imageurl = imageUrl;
     }
 
     static getByUserId(userId){
-        const drafts = draftsList.filter((draft) => draft.userId == userId);
+        const drafts = draftsList.filter((draft) => draft.userid == userId);
         if(drafts.length == 0) throw new ApplicationError(`${NO_DRAFT_ITEM_CREATED}`, NOT_FOUND_CODE);
         return drafts;
     }
@@ -34,7 +34,7 @@ export default class DraftsModel{
         const draft = draftsList.find((draft) => draft.id == id);
         if(!draft) throw new ApplicationError(`${DRAFT_ITEM_NOT_FOUND} ${id}`, NOT_FOUND_CODE);
 
-        if(draft.userId !== userId) throw new ApplicationError(`${FORBIDDEN_USER}`, FORBIDDEN_STATUS_CODE);
+        if(draft.userid !== userId) throw new ApplicationError(`${FORBIDDEN_USER}`, FORBIDDEN_STATUS_CODE);
 
         return draft;
     }
@@ -46,6 +46,20 @@ export default class DraftsModel{
         const newDraftItem = new DraftsModel(newId, userId, caption, imageUrl);
         draftsList.push(newDraftItem);
         return newDraftItem;
+    }
+
+    static update(draftId, userId, caption, imageFile){
+        const draftIndex = draftsList.findIndex((draft) => draft.id == draftId);
+        if(draftIndex == -1) return new ApplicationError(`${DRAFT_ITEM_NOT_FOUND} ${draftId}`, NOT_FOUND_CODE);
+
+        const draft = draftsList[draftIndex];
+
+        if(draft.userid !== userId) return new ApplicationError(FORBIDDEN_USER_UPDATE, FORBIDDEN_STATUS_CODE);
+        
+        if(caption) draft.caption = caption;
+        if(imageFile) draft.imageurl = IMAGE_URL + imageFile.path.replace(/^public[\\/]/, "").replace(/\\/g, "/");
+
+        return draft;
     }
 
 }

@@ -28,7 +28,7 @@ export default class PostsModel{
         return postList;
     }
 
-    static getByPostId(postId){
+    static getById(postId){
         const post = postList.find((post) => post.id == postId);
         if(!post) throw new ApplicationError(`${POST_NOT_FOUND} ${postId}`, POST_NOT_FOUND_CODE);
         return post;

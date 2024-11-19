@@ -2005,9 +2005,9 @@
             }
           },
           "put": {
-            "tags": ["Posts"],
-            "summary": "Update post",
-            "description": "Update post for the authenticated user with an image and caption. Requires a valid JWT token in the Authorization header.",
+            "tags": ["Drafts"],
+            "summary": "Update draft",
+            "description": "Update draft item for the authenticated user with an image and caption. Requires a valid JWT token in the Authorization header.",
             "parameters": [
               {
                 "name": "Authorization",
@@ -2046,8 +2046,8 @@
                       },
                       "caption": {
                         "type": "string",
-                        "description": "Caption for the post. Must be between 5 and 2200 characters, cannot contain prohibited words, too many hashtags (max 30), emojis (max 50), or special symbols.",
-                        "example": "My first post on this platform!",
+                        "description": "Caption for the draft item. Must be between 5 and 2200 characters, cannot contain prohibited words, too many hashtags (max 30), emojis (max 50), or special symbols.",
+                        "example": "My first updated draft on this platform!",
                          "nullable": true
                       }
                     }
@@ -2057,7 +2057,7 @@
             },
             "responses": {
               "200": {
-                "description": "Post updated",
+                "description": "draft item updated",
                 "content": {
                   "application/json": {
                     "schema": {
@@ -2073,7 +2073,7 @@
                         },
                         "caption": {
                           "type": "string",
-                          "example": "My first post on this platform!"
+                          "example": "My first updated draft on this platform!"
                         },
                         "imageurl": {
                           "type": "string",
@@ -2109,7 +2109,7 @@
                       "properties": {
                         "error": {
                           "type": "string",
-                          "example": "Forbidden - You don't have access to update this post"
+                          "example": "Forbidden - You don't have access to update this draft"
                         }
                       }
                     }
@@ -2117,7 +2117,7 @@
                 }
               },
               "404": {
-                "description": "Post not found",
+                "description": "draft item not found",
                 "content": {
                   "application/json": {
                     "schema": {
@@ -2125,7 +2125,7 @@
                       "properties": {
                         "error": {
                           "type": "string",
-                          "example": "Please check the post ID and try again. No post found with ID: 123."
+                          "example": "Please check the draft ID and try again. No draft item found with ID: 123."
                         }
                       }
                     }

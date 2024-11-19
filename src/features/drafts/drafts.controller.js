@@ -12,11 +12,16 @@ export default class DraftsController{
         res.status(SUCCESS_CODE).json({draftItems: drafts})
     }
 
-    getDraftItemById(req, res){
+    getDraftItemById(req, res, next){
         const userId = req.userId;
         const draftId = req.params["id"];
-        const draftItem = DraftsModel.getById(draftId, userId);
-        res.status(SUCCESS_CODE).json({draftItem : draftItem});
+        try{
+            const draftItem = DraftsModel.getById(draftId, userId);
+            res.status(SUCCESS_CODE).json({draftItem : draftItem});
+        }catch(err){
+            next(err);
+        }
+        
     }
 
     createDraftItem(req, res){
@@ -29,6 +34,12 @@ export default class DraftsController{
     }
 
     updateDraftItem(req, res){
+        const userId = req.userId;
+        const {caption} = req.body;
+        const postId = req.params["id"];
+        const imageFile = req.file;
+        const draftItem = DraftsModel.update(postId, userId, caption, imageFile);
+        res.status(SUCCESS_CODE).json({draftItem : draftItem});
 
     }
 

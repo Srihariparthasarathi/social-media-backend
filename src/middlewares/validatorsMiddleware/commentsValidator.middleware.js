@@ -13,7 +13,7 @@ const newCommentValidator = async (req, res, next) =>{
         .isInt({ min: 1 }) 
         .withMessage('ID must be a positive integer')
         .custom((value) =>{
-            const post = PostModel.getByPostId(value);
+            const post = PostModel.getById(value);
             if(!post) throw new Error(`${POST_NOT_FOUND} ${value}`);
             return true;
         }),
