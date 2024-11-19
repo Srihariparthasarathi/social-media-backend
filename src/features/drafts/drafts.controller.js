@@ -59,6 +59,9 @@ export default class DraftsController{
     }
 
     archiveDraftToPost(req, res){
-
+        const userId = req.userId;
+        const draftId = req.params["id"];
+        const archivedPost = DraftsModel.archivePost(draftId, userId);
+        res.status(SUCCESS_CODE).json({post : archivedPost});
     }
 }

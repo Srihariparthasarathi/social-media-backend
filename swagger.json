@@ -2262,7 +2262,130 @@
               }
             }
           }
-      }
+        },
+        "/drafts/archive/{id}": {
+          "post": {
+            "tags": ["Drafts"],
+            "summary": "archive draft to post",
+            "description": "archive draft item for the authenticated user. Requires a valid JWT token in the Authorization header.",
+            "parameters": [
+              {
+                "name": "Authorization",
+                "in": "header",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "example": "your_jwt_token_here"
+                },
+                "description": "JWT token for authentication"
+              },
+              {
+                "name": "id",
+                "in": "path",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "example": "1"
+                },
+                "description": "ID of the draft item to delete"
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "draft item archive to post",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "userid": {
+                          "type": "integer",
+                          "example": 1
+                        },
+                        "caption": {
+                          "type": "string",
+                          "example": "My first archive post on this platform!"
+                        },
+                        "imageurl": {
+                          "type": "string",
+                          "example": "http://example.com/image1.jpg"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "401": {
+                "description": "Unauthorized - JWT missing or invalid",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Authentication token is missing or invalid. Please provide a valid token in the Authorization header."
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "403": {
+                "description": "Forbidden",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Forbidden - You don't have access to this draft"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "404": {
+                "description": "draft item not found",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Please check the draft ID and try again. No draft item found with ID: 123."
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "400": {
+                "description": "Bad Request - Invalid user ID or account deleted",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "example": "Invalid user ID or account deleted. Please check the user ID and try again."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
 
       }
 }

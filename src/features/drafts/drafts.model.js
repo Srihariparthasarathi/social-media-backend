@@ -1,4 +1,5 @@
 import ApplicationError from "../../middlewares/applicationError.middleware.js";
+import PostsModel from "../posts/posts.model.js";
 
 
 const NO_DRAFT_ITEM_CREATED = "You haven't created any Draft item yet";
@@ -68,12 +69,27 @@ export default class DraftsModel{
 
         const draft = draftsList[draftIndex];
 
-        if(draft.userid !== userId) throw new ApplicationError(FORBIDDEN_USER_UPDATE, FORBIDDEN_STATUS_CODE);
+        if(draft.userid !== userId) throw new ApplicationError(FORBIDDEN_USER, FORBIDDEN_STATUS_CODE);
 
         const deletedDraft = draftsList.splice(draftIndex, 1);
         if(!deletedDraft) throw new Error(` ${ERROE_UNABLE_TO_DELETE} ${draftId}`);
         
         return deletedDraft[0];
+
+    }
+
+    static archivePost(draftId, userId){
+        const draftIndex = draftsList.findIndex((draft) => draft.id == draftId);
+        if(draftIndex == -1) throw new ApplicationError(`${DRAFT_ITEM_NOT_FOUND} ${draftId}`, NOT_FOUND_CODE);
+
+        const draft = draftsList[draftIndex];
+
+        if(draft.userid !== userId) throw new ApplicationError(FORBIDDEN_USER_UPDATE, FORBIDDEN_STATUS_CODE);
+
+        let {caption , imageurl} =  draft;
+        const archivedPost = PostsModel.add(userId, caption, imageurl.split("/").pop());
+        draftsList.splice(draftIndex, 1);
+        return archivedPost;
 
     }
 
