@@ -1,4 +1,5 @@
 import DraftsModel from "./drafts.model.js";
+import {deleteImageAfterPostOrDraftDelete} from "../../middlewares/deleteImage.middleware.js"
 
 const SUCCESS_CODE = 200;
 const CREATED_SUCCESS_CODE = 201;
@@ -29,7 +30,7 @@ export default class DraftsController{
         const {caption} = req.body;
         const filePath = req.file.path;
         const draftItem = DraftsModel.add(userId, caption, filePath);
-        res.status(SUCCESS_CODE).json({draftItem : draftItem});
+        res.status(CREATED_SUCCESS_CODE).json({draftItem : draftItem});
 
     }
 
@@ -43,7 +44,17 @@ export default class DraftsController{
 
     }
 
-    deleteDraftItem(req, rea){
+    deleteDraftItem(req, res, next){
+        const userId = req.userId;
+        const draftId = req.params["id"];
+        try{
+            const draft =  DraftsModel.delete(draftId, userId);
+       
+            deleteImageAfterPostOrDraftDelete(draft, next);
+            return res.sendStatus(NO_CONTENT_CODE)
+        }catch(err){
+            next(err);
+        }
 
     }
 

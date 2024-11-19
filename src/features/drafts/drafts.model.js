@@ -50,16 +50,31 @@ export default class DraftsModel{
 
     static update(draftId, userId, caption, imageFile){
         const draftIndex = draftsList.findIndex((draft) => draft.id == draftId);
-        if(draftIndex == -1) return new ApplicationError(`${DRAFT_ITEM_NOT_FOUND} ${draftId}`, NOT_FOUND_CODE);
+        if(draftIndex == -1) throw new ApplicationError(`${DRAFT_ITEM_NOT_FOUND} ${draftId}`, NOT_FOUND_CODE);
 
         const draft = draftsList[draftIndex];
 
-        if(draft.userid !== userId) return new ApplicationError(FORBIDDEN_USER_UPDATE, FORBIDDEN_STATUS_CODE);
+        if(draft.userid !== userId) throw new ApplicationError(FORBIDDEN_USER_UPDATE, FORBIDDEN_STATUS_CODE);
         
         if(caption) draft.caption = caption;
         if(imageFile) draft.imageurl = IMAGE_URL + imageFile.path.replace(/^public[\\/]/, "").replace(/\\/g, "/");
 
         return draft;
+    }
+
+    static delete(draftId, userId){
+        const draftIndex = draftsList.findIndex((draft) => draft.id == draftId);
+        if(draftIndex == -1) throw new ApplicationError(`${DRAFT_ITEM_NOT_FOUND} ${draftId}`, NOT_FOUND_CODE);
+
+        const draft = draftsList[draftIndex];
+
+        if(draft.userid !== userId) throw new ApplicationError(FORBIDDEN_USER_UPDATE, FORBIDDEN_STATUS_CODE);
+
+        const deletedDraft = draftsList.splice(draftIndex, 1);
+        if(!deletedDraft) throw new Error(` ${ERROE_UNABLE_TO_DELETE} ${draftId}`);
+        
+        return deletedDraft[0];
+
     }
 
 }

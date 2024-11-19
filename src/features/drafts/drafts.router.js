@@ -18,7 +18,7 @@ router.get("/",jwtAuth, isUserExistsMiddleware, draftsController.getAllDraftsByU
 router.post("/", jwtAuth, isUserExistsMiddleware, imageUploadMiddleware, draftValidator(), draftsController.createDraftItem);
 router.get("/:id", jwtAuth, isUserExistsMiddleware, draftsController.getDraftItemById);
 router.put("/:id", jwtAuth, isUserExistsMiddleware, imageUploadMiddleware, draftValidator(true), deletePreviousImage(DRAFT_FEATURE_TYPE), draftsController.updateDraftItem);
-router.delete("/:id");
+router.delete("/:id", jwtAuth,isUserExistsMiddleware, draftsController.deleteDraftItem);
 router.post("/archive/:id");
 
 

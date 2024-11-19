@@ -2167,9 +2167,9 @@
             }
           },
           "delete": {
-            "tags": ["Posts"],
-            "summary": "delete post",
-            "description": "delete post for the authenticated user. Requires a valid JWT token in the Authorization header.",
+            "tags": ["Drafts"],
+            "summary": "delete draft",
+            "description": "delete draft item for the authenticated user. Requires a valid JWT token in the Authorization header.",
             "parameters": [
               {
                 "name": "Authorization",
@@ -2189,12 +2189,12 @@
                   "type": "string",
                   "example": "1"
                 },
-                "description": "ID of the post to delete"
+                "description": "ID of the draft item to delete"
               }
             ],
             "responses": {
               "204": {
-                "description": "Post deleted"
+                "description": "draft deleted"
               },
               "401": {
                 "description": "Unauthorized - JWT missing or invalid",
@@ -2221,7 +2221,7 @@
                       "properties": {
                         "error": {
                           "type": "string",
-                          "example": "Forbidden - You don't have access to delete this post"
+                          "example": "Forbidden - You don't have access to delete this draft itme"
                         }
                       }
                     }
@@ -2229,7 +2229,7 @@
                 }
               },
               "404": {
-                "description": "Post not found",
+                "description": "draft item not found",
                 "content": {
                   "application/json": {
                     "schema": {
@@ -2237,7 +2237,7 @@
                       "properties": {
                         "error": {
                           "type": "string",
-                          "example": "Please check the post ID and try again. No post found with ID: 1"
+                          "example": "Please check the draft ID and try again. No draft found with ID: 1"
                         }
                       }
                     }

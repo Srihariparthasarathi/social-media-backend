@@ -1,5 +1,5 @@
 import PostsModel from "./posts.model.js";
-import {deleteImageAfterPostOrDraftDelete} from "../../middlewares/deleteImage.middleware.js"
+import {deleteImageAfterPostOrDraftDelete} from "../../middlewares/deleteImage.middleware.js";
 
 const RETURN_POST_SUCCESS_CODE = 200;
 const POST_CREATED_SUCCESS_CODE = 201;
