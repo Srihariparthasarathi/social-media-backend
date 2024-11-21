@@ -62,5 +62,13 @@ export default class CommentsModel{
 
 const commentList = [
     new CommentsModel(1, 1, 1, "wonderful post"),
-    new CommentsModel(2, 1, 2, "wonderful post i love it")
+    new CommentsModel(2, 1, 2, "wonderful post i love it"),
+    new CommentsModel(3, 1, 2, "wonderful post"),
+    new CommentsModel(4, 1, 3, "wonderful post i love it"),
+    new CommentsModel(5, 1, 3, "wonderful post"),
+    new CommentsModel(6, 1, 3, "wonderful post i love it"),
+    new CommentsModel(7, 1, 5, "wonderful post"),
+    new CommentsModel(8, 1, 5, "wonderful post i love it"),
+    new CommentsModel(9, 1, 5, "wonderful post"),
+    new CommentsModel(10, 1, 5, "wonderful post i love it"),
 ]

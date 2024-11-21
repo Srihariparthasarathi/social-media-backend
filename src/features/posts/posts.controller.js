@@ -2,6 +2,7 @@ import PostsModel from "./posts.model.js";
 import {deleteImageAfterPostOrDraftDelete} from "../../middlewares/deleteImage.middleware.js";
 import { postpaginationUtils } from "../../utils/paginition.utils.js";
 import filterByCaption from "../../utils/captionFilter.utils.js"
+import userEngagementSortPosts from "../../utils/userEngagementFilter.utils.js";
 
 const RETURN_POST_SUCCESS_CODE = 200;
 const POST_CREATED_SUCCESS_CODE = 201;
@@ -13,6 +14,8 @@ export default class PostsController{
     getAllPosts(req, res){
         let posts = PostsModel.getAll();
         const { search } = req.query;
+        
+        posts = userEngagementSortPosts(posts);
 
         if(search){
             posts = filterByCaption(req, posts);
