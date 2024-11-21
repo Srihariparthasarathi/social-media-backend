@@ -203,8 +203,8 @@
         "/posts/all": {
           "get": {
             "tags": ["Posts"],
-            "summary": "Retrieve all posts with pagination",
-            "description": "Get a paginated list of posts made by users on the platform. Query parameters `page` and `limit` are optional.",
+            "summary": "Retrieve all posts with pagination and search",
+            "description": "Get a paginated list of posts with an optional search filter for captions. Query parameters `page`, `limit`, and `search` are optional.",
             "parameters": [
               {
                 "name": "page",
@@ -227,6 +227,16 @@
                   "example": 10
                 },
                 "description": "The number of posts per page. Default is 10."
+              },
+              {
+                "name": "search",
+                "in": "query",
+                "required": false,
+                "schema": {
+                  "type": "string",
+                  "example": "beach"
+                },
+                "description": "The search query to filter posts by caption."
               }
             ],
             "responses": {
@@ -245,37 +255,16 @@
                               "items": {
                                 "type": "object",
                                 "properties": {
-                                  "id": {
-                                    "type": "integer",
-                                    "description": "The unique identifier for the post"
-                                  },
-                                  "userid": {
-                                    "type": "integer",
-                                    "description": "The ID of the user who created the post"
-                                  },
-                                  "caption": {
-                                    "type": "string",
-                                    "description": "The caption or description of the post"
-                                  },
-                                  "imageurl": {
-                                    "type": "string",
-                                    "description": "The URL of the image associated with the post"
-                                  }
+                                  "id": { "type": "integer" },
+                                  "userid": { "type": "integer" },
+                                  "caption": { "type": "string" },
+                                  "imageurl": { "type": "string" }
                                 }
                               }
                             },
-                            "totalPosts": {
-                              "type": "integer",
-                              "description": "The total number of posts available."
-                            },
-                            "currentPage": {
-                              "type": "integer",
-                              "description": "The current page number."
-                            },
-                            "totalPage": {
-                              "type": "integer",
-                              "description": "The total number of pages available."
-                            }
+                            "totalPosts": { "type": "integer" },
+                            "currentPage": { "type": "integer" },
+                            "totalPage": { "type": "integer" }
                           }
                         }
                       }
@@ -286,19 +275,13 @@
                           {
                             "id": 1,
                             "userid": 1,
-                            "caption": "My first post on this platform!",
-                            "imageurl": "http://example.com/image1.jpg"
-                          },
-                          {
-                            "id": 2,
-                            "userid": 1,
                             "caption": "Had a great day at the beach.",
                             "imageurl": "http://example.com/image2.jpg"
                           }
                         ],
-                        "totalPosts": 18,
+                        "totalPosts": 1,
                         "currentPage": 1,
-                        "totalPage": 2
+                        "totalPage": 1
                       }
                     }
                   }
@@ -311,20 +294,17 @@
                     "schema": {
                       "type": "object",
                       "properties": {
-                        "error": {
-                          "type": "string",
-                          "description": "Error message when no posts exist"
-                        }
+                        "error": { "type": "string" }
                       },
                       "example": {
-                        "error": "There are no posts yet. Be the first to share and make your mark!"
+                        "error": "No posts match your search query."
                       }
                     }
                   }
                 }
               }
             }
-          }
+          }          
         },
         "/posts/{id}": {
             "get": {

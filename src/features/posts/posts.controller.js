@@ -1,6 +1,7 @@
 import PostsModel from "./posts.model.js";
 import {deleteImageAfterPostOrDraftDelete} from "../../middlewares/deleteImage.middleware.js";
-import { postpaginationUtils } from "../../utils/paginition.utils.js"
+import { postpaginationUtils } from "../../utils/paginition.utils.js";
+import filterByCaption from "../../utils/captionFilter.utils.js"
 
 const RETURN_POST_SUCCESS_CODE = 200;
 const POST_CREATED_SUCCESS_CODE = 201;
@@ -10,7 +11,12 @@ const NO_CONTENT_CODE = 204;
 export default class PostsController{
 
     getAllPosts(req, res){
-        const posts = PostsModel.getAll();
+        let posts = PostsModel.getAll();
+        const { search } = req.query;
+
+        if(search){
+            posts = filterByCaption(req, posts);
+        } 
 
         let  data = postpaginationUtils(req, posts);
         res.status(RETURN_POST_SUCCESS_CODE).json({data: data});
