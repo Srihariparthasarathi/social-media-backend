@@ -1,4 +1,5 @@
 import CommentsModel from "./comments.model.js";
+import { commentsPaginationUtils } from "../../utils/paginition.utils.js";
 
 const SUCCESS_CODE = 200;
 const CREATE_SUCCESS_CODE = 201;
@@ -9,7 +10,9 @@ export default class CommentsController{
     getAllComments(req, res){
         const userId = req.params["id"];
         const comments = CommentsModel.getAllByPostId(userId);
-        return res.status(SUCCESS_CODE).json({comments: comments});
+        
+        const data = commentsPaginationUtils(req, comments)
+        return res.status(SUCCESS_CODE).json({data: data});
     }
 
     createComment(req, res){
@@ -33,7 +36,7 @@ export default class CommentsController{
     deleteComment(req, res){
         const commentId = req.params["id"];
         const userId = req.userId;
-        const deletedComment = CommentsModel.delete(userId, Number(commentId));
+        CommentsModel.delete(userId, Number(commentId));
         return res.sendStatus(NO_CONTENT_CODE);
     }
 }

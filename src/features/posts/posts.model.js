@@ -26,6 +26,8 @@ export default class PostsModel{
     static getAll(){
         if(postList.length == 0) throw new ApplicationError(NO_POST_IN_APPLICATION, POST_NOT_FOUND_CODE);
         return postList;
+         
+        
     }
 
     static getById(postId){
@@ -81,4 +83,21 @@ export default class PostsModel{
 const postList = [
     new PostsModel(1, 1, "My first post on this platform!", "http://example.com/image1.jpg"),
     new PostsModel(2, 1, "Had a great day at the beach.", "http://example.com/image2.jpg"),
+    new PostsModel(3, 1, "My first post on this platform!", "http://example.com/image1.jpg"),
+    new PostsModel(4, 1, "Had a great day at the beach.", "http://example.com/image2.jpg"),
+    new PostsModel(5, 1, "My first post on this platform!", "http://example.com/image1.jpg"),
+    new PostsModel(6, 1, "Had a great day at the beach.", "http://example.com/image2.jpg"),
+    new PostsModel(7, 1, "My first post on this platform!", "http://example.com/image1.jpg"),
+    new PostsModel(8, 1, "Had a great day at the beach.", "http://example.com/image2.jpg"),
+    new PostsModel(9, 1, "My first post on this platform!", "http://example.com/image1.jpg"),
+    new PostsModel(10, 1, "Had a great day at the beach.", "http://example.com/image2.jpg"),
+    new PostsModel(11, 1, "My first post on this platform!", "http://example.com/image1.jpg"),
+    new PostsModel(12, 1, "Had a great day at the beach.", "http://example.com/image2.jpg"),
+    new PostsModel(13, 1, "My first post on this platform!", "http://example.com/image1.jpg"),
+    new PostsModel(14, 1, "Had a great day at the beach.", "http://example.com/image2.jpg"),
+    new PostsModel(15, 1, "My first post on this platform!", "http://example.com/image1.jpg"),
+    new PostsModel(16, 1, "Had a great day at the beach.", "http://example.com/image2.jpg"),
+    new PostsModel(17, 1, "My first post on this platform!", "http://example.com/image1.jpg"),
+    new PostsModel(18, 1, "Had a great day at the beach.", "http://example.com/image2.jpg"),
+
 ];

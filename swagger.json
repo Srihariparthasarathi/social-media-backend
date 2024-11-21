@@ -201,45 +201,87 @@
             }
         },
         "/posts/all": {
-            "get": {
-              "tags": ["Posts"],
-              "summary": "Retrieve all posts",
-              "description": "Get a list of all posts made by users on the platform.",
-              "responses": {
-                "200": {
-                  "description": "Successfully retrieved the posts",
-                  "content": {
-                    "application/json": {
-                      "schema": {
-                        "type": "object",
-                        "properties": {
-                          "posts": {
-                            "type": "array",
-                            "items": {
-                              "type": "object",
-                              "properties": {
-                                "id": {
-                                  "type": "integer",
-                                  "description": "The unique identifier for the post"
-                                },
-                                "userid": {
-                                  "type": "integer",
-                                  "description": "The ID of the user who created the post"
-                                },
-                                "caption": {
-                                  "type": "string",
-                                  "description": "The caption or description of the post"
-                                },
-                                "imageurl": {
-                                  "type": "string",
-                                  "description": "The URL of the image associated with the post"
+          "get": {
+            "tags": ["Posts"],
+            "summary": "Retrieve all posts with pagination",
+            "description": "Get a paginated list of posts made by users on the platform. Query parameters `page` and `limit` are optional.",
+            "parameters": [
+              {
+                "name": "page",
+                "in": "query",
+                "required": false,
+                "schema": {
+                  "type": "integer",
+                  "default": 1,
+                  "example": 1
+                },
+                "description": "The page number to retrieve. Default is 1."
+              },
+              {
+                "name": "limit",
+                "in": "query",
+                "required": false,
+                "schema": {
+                  "type": "integer",
+                  "default": 10,
+                  "example": 10
+                },
+                "description": "The number of posts per page. Default is 10."
+              }
+            ],
+            "responses": {
+              "200": {
+                "description": "Successfully retrieved the posts",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "posts": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "integer",
+                                    "description": "The unique identifier for the post"
+                                  },
+                                  "userid": {
+                                    "type": "integer",
+                                    "description": "The ID of the user who created the post"
+                                  },
+                                  "caption": {
+                                    "type": "string",
+                                    "description": "The caption or description of the post"
+                                  },
+                                  "imageurl": {
+                                    "type": "string",
+                                    "description": "The URL of the image associated with the post"
+                                  }
                                 }
                               }
+                            },
+                            "totalPosts": {
+                              "type": "integer",
+                              "description": "The total number of posts available."
+                            },
+                            "currentPage": {
+                              "type": "integer",
+                              "description": "The current page number."
+                            },
+                            "totalPage": {
+                              "type": "integer",
+                              "description": "The total number of pages available."
                             }
                           }
                         }
-                      },
-                      "example": {
+                      }
+                    },
+                    "example": {
+                      "data": {
                         "posts": [
                           {
                             "id": 1,
@@ -253,32 +295,36 @@
                             "caption": "Had a great day at the beach.",
                             "imageurl": "http://example.com/image2.jpg"
                           }
-                        ]
+                        ],
+                        "totalPosts": 18,
+                        "currentPage": 1,
+                        "totalPage": 2
                       }
                     }
                   }
-                },
-                "404": {
-                  "description": "No posts found",
-                  "content": {
-                    "application/json": {
-                      "schema": {
-                        "type": "object",
-                        "properties": {
-                          "error": {
-                            "type": "string",
-                            "description": "Error message when no posts exist"
-                          }
-                        },
-                        "example": {
-                          "error": "There are no posts yet. Be the first to share and make your mark!"
+                }
+              },
+              "404": {
+                "description": "No posts found",
+                "content": {
+                  "application/json": {
+                    "schema": {
+                      "type": "object",
+                      "properties": {
+                        "error": {
+                          "type": "string",
+                          "description": "Error message when no posts exist"
                         }
+                      },
+                      "example": {
+                        "error": "There are no posts yet. Be the first to share and make your mark!"
                       }
                     }
                   }
                 }
               }
             }
+          }
         },
         "/posts/{id}": {
             "get": {
@@ -821,74 +867,128 @@
         },
         "/comments/{id}": {
             "get": {
-            "tags": ["comments"],
-            "summary": "Retrieve all comments based on Post ID",
-            "description": "Fetches comments by Post ID. If comments exist, it returns all comments belonging to the specified post. Otherwise, it returns a 404 error.",
-            "parameters": [
-              {
-                "name": "id",
-                "in": "path",
-                "required": true,
-                "schema": {
-                  "type": "string",
-                  "example": "1"
+              "tags": ["comments"],
+              "summary": "Retrieve all comments based on Post ID with pagination",
+              "description": "Fetches comments by Post ID. Supports pagination using query parameters `limit` and `page`. If comments exist, it returns all comments belonging to the specified post. Otherwise, it returns a 404 error.",
+              "parameters": [
+                {
+                  "name": "id",
+                  "in": "path",
+                  "required": true,
+                  "schema": {
+                    "type": "string",
+                    "example": "1"
+                  },
+                  "description": "ID of the post to retrieve comments for"
                 },
-                "description": "ID of the post to retrieve comments for"
-              }
-            ],
-            "responses": {
-              "200": {
-                "description": "Comments retrieved successfully",
-                "content": {
-                  "application/json": {
-                    "schema": {
-                      "type": "object",
-                      "properties": {
-                        "posts": {
-                          "type": "array",
-                          "items": {
+                {
+                  "name": "limit",
+                  "in": "query",
+                  "required": false,
+                  "schema": {
+                    "type": "integer",
+                    "default": 10,
+                    "example": 10
+                  },
+                  "description": "The number of comments per page. Default is 10."
+                },
+                {
+                  "name": "page",
+                  "in": "query",
+                  "required": false,
+                  "schema": {
+                    "type": "integer",
+                    "default": 1,
+                    "example": 1
+                  },
+                  "description": "The page number to retrieve. Default is 1."
+                }
+              ],
+              "responses": {
+                "200": {
+                  "description": "Comments retrieved successfully",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "data": {
                             "type": "object",
                             "properties": {
-                              "id": {
-                                "type": "integer",
-                                "example": 1
+                              "comments": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "id": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "userId": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "postId": {
+                                      "type": "integer",
+                                      "example": 1
+                                    },
+                                    "content": {
+                                      "type": "string",
+                                      "example": "wonderful post"
+                                    }
+                                  }
+                                }
                               },
-                              "userId": {
+                              "totalComments": {
                                 "type": "integer",
-                                "example": 1
+                                "description": "The total number of comments for the post."
                               },
-                              "postId": {
+                              "currentPage": {
                                 "type": "integer",
-                                "example": 1
+                                "description": "The current page number."
                               },
-                              "content": {
-                                "type": "string",
-                                "example": "Amazing post!"
+                              "totalPage": {
+                                "type": "integer",
+                                "description": "The total number of pages available."
                               }
                             }
+                          }
+                        }
+                      },
+                      "example": {
+                        "data": {
+                          "comments": [
+                            {
+                              "id": 1,
+                              "userId": 1,
+                              "postId": 1,
+                              "content": "wonderful post"
+                            }
+                          ],
+                          "totalComments": 1,
+                          "currentPage": 1,
+                          "totalPage": 1
+                        }
+                      }
+                    }
+                  }
+                },
+                "404": {
+                  "description": "Comments not found for this post",
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "type": "object",
+                        "properties": {
+                          "error": {
+                            "type": "string",
+                            "example": "Please check the post ID and try again. No comments found for post ID: 3"
                           }
                         }
                       }
                     }
                   }
                 }
-              },
-              "404": {
-                "description": "Comments not found for this post",
-                "content": {
-                  "application/json": {
-                    "schema": {
-                      "type": "object",
-                      "properties": {
-                        "error": {
-                          "type": "string",
-                          "example": "Please check the post ID and try again. No comments found for post ID: 3"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
               }
             },
             "post": {
@@ -1648,18 +1748,40 @@
           "get": {
             "tags": ["Drafts"],
             "summary": "Get all Drafts for Authenticated user",
-            "description": "Fetches all Draft items of the authenticated user. If no draft Item are created, a message is returned. Requires a valid JWT token in the Authorization header.",
+            "description": "Fetches all Draft items of the authenticated user with pagination support. Requires a valid JWT token in the Authorization header.",
             "parameters": [
               {
-                  "name": "Authorization",
-                  "in": "header",
-                  "required": true,
-                  "schema": {
-                    "type": "string",
-                    "example": "your_jwt_token_here"
-                  },
-                  "description": "JWT token for authentication"
-                }
+                "name": "Authorization",
+                "in": "header",
+                "required": true,
+                "schema": {
+                  "type": "string",
+                  "example": "your_jwt_token_here"
+                },
+                "description": "JWT token for authentication"
+              },
+              {
+                "name": "page",
+                "in": "query",
+                "required": false,
+                "schema": {
+                  "type": "integer",
+                  "default": 1,
+                  "example": 1
+                },
+                "description": "Page number for pagination (default: 1)"
+              },
+              {
+                "name": "limit",
+                "in": "query",
+                "required": false,
+                "schema": {
+                  "type": "integer",
+                  "default": 10,
+                  "example": 10
+                },
+                "description": "Number of items per page (default: 10)"
+              }
             ],
             "responses": {
               "200": {
@@ -1669,27 +1791,44 @@
                     "schema": {
                       "type": "object",
                       "properties": {
-                        "draftItems": {
-                          "type": "array",
-                          "items": {
-                            "type": "object",
-                            "properties": {
-                              "id": {
-                                "type": "integer",
-                                "example": 1
-                              },
-                              "userid": {
-                                "type": "integer",
-                                "example": 1
-                              },
-                              "caption": {
-                                "type": "string",
-                                "example": "this is my first draft item"
-                              },
-                              "imageurl": {
-                                "type": "string",
-                                "example": "http://example.com/image1.jpg"
+                        "data": {
+                          "type": "object",
+                          "properties": {
+                            "draftitems": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "integer",
+                                    "example": 3
+                                  },
+                                  "userid": {
+                                    "type": "integer",
+                                    "example": 2
+                                  },
+                                  "caption": {
+                                    "type": "string",
+                                    "example": "🌟 \"Your story, your platform, your way! Share, connect, and inspire the world—one post at a time. Let’s make social truly social.\" 🌍✨ #YourPlatform #StayConnected #Inspire"
+                                  },
+                                  "imageurl": {
+                                    "type": "string",
+                                    "example": "http://localhost:3100/media/1732180954734-IMG_0038.JPG"
+                                  }
+                                }
                               }
+                            },
+                            "totalDraftItems": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "currentPage": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "totalPage": {
+                              "type": "integer",
+                              "example": 1
                             }
                           }
                         }
@@ -1739,7 +1878,7 @@
                       "properties": {
                         "error": {
                           "type": "string",
-                          "example": "Forbidden - You don't have access to update this post"
+                          "example": "Forbidden - You don't have access to view these drafts."
                         }
                       }
                     }
@@ -1755,7 +1894,7 @@
                       "properties": {
                         "error": {
                           "type": "string",
-                          "example": "You haven't created any Draft item yet"
+                          "example": "You haven't created any Draft item yet."
                         }
                       }
                     }

@@ -1,5 +1,6 @@
 import DraftsModel from "./drafts.model.js";
-import {deleteImageAfterPostOrDraftDelete} from "../../middlewares/deleteImage.middleware.js"
+import {deleteImageAfterPostOrDraftDelete} from "../../middlewares/deleteImage.middleware.js";
+import { draftsPaginationUtils } from "../../utils/paginition.utils.js"
 
 const SUCCESS_CODE = 200;
 const CREATED_SUCCESS_CODE = 201;
@@ -10,7 +11,9 @@ export default class DraftsController{
     getAllDraftsByUserId(req, res){
         const userId = req.userId;
         const drafts = DraftsModel.getByUserId(userId);
-        res.status(SUCCESS_CODE).json({draftItems: drafts})
+
+        const data = draftsPaginationUtils(req, drafts)
+        res.status(SUCCESS_CODE).json({data: data})
     }
 
     getDraftItemById(req, res, next){

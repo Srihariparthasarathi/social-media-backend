@@ -1,5 +1,6 @@
 import PostsModel from "./posts.model.js";
 import {deleteImageAfterPostOrDraftDelete} from "../../middlewares/deleteImage.middleware.js";
+import { postpaginationUtils } from "../../utils/paginition.utils.js"
 
 const RETURN_POST_SUCCESS_CODE = 200;
 const POST_CREATED_SUCCESS_CODE = 201;
@@ -10,7 +11,10 @@ export default class PostsController{
 
     getAllPosts(req, res){
         const posts = PostsModel.getAll();
-        res.status(RETURN_POST_SUCCESS_CODE).json({posts: posts});
+
+        let  data = postpaginationUtils(req, posts);
+        res.status(RETURN_POST_SUCCESS_CODE).json({data: data});
+
     }
 
     getPostById(req, res, next){
@@ -27,7 +31,9 @@ export default class PostsController{
     getPostByUser(req, res){
         const userId = req.userId;
         const posts = PostsModel.getByUserId(userId);
-        res.status(RETURN_POST_SUCCESS_CODE).json({posts: posts});
+        
+        let  data = postPagenationUtils(req, posts);
+        res.status(RETURN_POST_SUCCESS_CODE).json({data: data});
 
     }
 
